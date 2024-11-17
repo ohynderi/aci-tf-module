@@ -1,0 +1,25 @@
+resource "aci_rest_managed" "fabricExplicitGEp" {
+  for_each   = local.vpc_domain
+  dn         = "${aci_rest_managed.fabricProtPol.dn}/expgep-${each.key}"
+  class_name = "fabricExplicitGEp"
+  content = {
+    name = each.value.id
+    id   = each.value.id
+  }
+
+  child {
+    rn         = "nodepep-${each.value.switch_1}"
+    class_name = "fabricNodePEp"
+    content = {
+      id = each.value.switch_1
+    }
+  }
+
+  child {
+    rn         = "nodepep-${each.value.switch_2}"
+    class_name = "fabricNodePEp"
+    content = {
+      id = each.value.switch_2
+    }
+  }
+}
